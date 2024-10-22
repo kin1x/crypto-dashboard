@@ -1,5 +1,5 @@
-import React, { FC, useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useParams, Link } from 'react-router-dom';
 import { Line } from 'react-chartjs-2';
 import axios from 'axios';
 import 'chartjs-adapter-date-fns';
@@ -28,6 +28,7 @@ ChartJS.register(
     TimeScale
 );
 
+// Определяем типы данных для crypto и chartData
 interface CryptoData {
     name: string;
     image: { large: string };
@@ -47,37 +48,23 @@ interface ChartData {
     }[];
 }
 
-const CryptoDetail: FC = () => {
+const CryptoDetail: React.FC = () => {
     const { id } = useParams<{ id: string }>();
     const [crypto, setCrypto] = useState<CryptoData | null>(null);
     const [chartData, setChartData] = useState<ChartData | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
-    const [notFoundError, setNotFoundError] = useState<string | null>(null);
-    const [networkError, setNetworkError] = useState<string | null>(null);
-    const [parseError, setParseError] = useState<string | null>(null);
 
-    // Функция для получения данных
     const fetchData = async () => {
         setLoading(true);
-        setCrypto(null);
-        setChartData(null);
-        setError(null);
-        setNotFoundError(null);
-        setNetworkError(null);
-        setParseError(null);
-        
         try {
             const [response, chartResponse] = await axios.all([
                 axios.get<CryptoData>(`https://api.coingecko.com/api/v3/coins/${id}`),
                 axios.get<any>(`https://api.coingecko.com/api/v3/coins/${id}/market_chart?vs_currency=usd&days=1`),
             ]);
 
+            // Проверяем статус ответа
             if (response.status === 200 && chartResponse.status === 200) {
-                if (!response.data || !chartResponse.data.prices) {
-                    throw new Error("No data found");
-                }
-
                 setCrypto(response.data);
                 setChartData({
                     labels: chartResponse.data.prices.map((price: [number, number]) => new Date(price[0])),
@@ -90,31 +77,29 @@ const CryptoDetail: FC = () => {
                         },
                     ],
                 });
+                setError(null);
             } else {
-                setNotFoundError("Криптовалюта не найдена. Проверьте идентификатор.");
+                setError("Не удалось получить данные о криптовалюте.");
             }
         } catch (error) {
-            if (axios.isAxiosError(error)) {
-                if (error.response) {
-                    setNotFoundError("Криптовалюта не найдена. Проверьте идентификатор.");
-                } else if (error.request) {
-                    setNetworkError("Сетевой сбой. Пожалуйста, проверьте ваше интернет-соединение.");
-                } else {
-                    setParseError("Произошла ошибка при парсинге данных. Пожалуйста, попробуйте снова.");
-                }
-            } else {
-                setParseError("Неизвестная ошибка. Пожалуйста, попробуйте снова.");
-            }
+            console.error("API Error: ", error); // Логируем ошибку
+            setError("Не удалось получить данные. Пожалуйста, попробуйте снова позже.");
         } finally {
             setLoading(false);
         }
     };
 
-    // Эффект для получения данных при каждом изменении id
     useEffect(() => {
         fetchData();
-    }, [id]);
 
+        // Очистка состояния при размонтировании компонента
+        return () => {
+            setCrypto(null);
+            setChartData(null);
+            setError(null);
+            setLoading(true);
+        };
+    }, [id]);
 
     // Настройки графика
     const options: ChartOptions<'line'> = {
@@ -151,20 +136,19 @@ const CryptoDetail: FC = () => {
         },
     };
 
+
     return (
         <div className="crypto-detail">
             {loading && <div className="loading-message">Loading...</div>}
-            {(error || notFoundError || networkError || parseError) && (
-                <div className="error-message">
-                    {error || notFoundError || networkError || parseError}
-                </div>
-            )}
+            {error && <div className="error-message">{error}</div>}
             {crypto && (
                 <div>
                     <h2>{crypto.name} Details</h2>
                     <img src={crypto.image.large} alt={crypto.name} className="crypto-logo" />
                     <p>Current Price: ${crypto.market_data.current_price.usd}</p>
                     <p>Market Cap: ${crypto.market_data.market_cap.usd.toLocaleString()}</p>
+                    {/* Добавлена ссылка на главную страницу */}
+                    <Link to="/">Back to Home</Link>
                 </div>
             )}
             {chartData && <Line data={chartData} options={options} />}
