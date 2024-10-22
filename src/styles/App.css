@@ -1,0 +1,118 @@
+/* Общий стиль для всего приложения */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f3f4f6;
+    color: #333;
+}
+
+/* Заголовок */
+h1, h2 {
+    text-align: center;
+    margin-top: 20px;
+}
+
+/* Стили для компонентов Header */
+.header {
+    background-color: #1e3a8a;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #ffffff;
+}
+
+.header-title {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.header-links {
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+    gap: 15px;
+}
+
+.header-links li {
+    display: inline;
+}
+
+.header-links a {
+    text-decoration: none;
+    color: #ffffff;
+    font-size: 18px;
+}
+
+.header-links a:hover {
+    color: #93c5fd;
+}
+
+/* Стили для страницы HomePage */
+.home-page {
+    padding: 20px;
+}
+
+/* Стили для компонента CryptoDetail */
+.crypto-detail {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.crypto-detail img.crypto-logo {
+    display: block;
+    margin: 10px auto;
+    max-width: 80px;
+    height: auto;
+    border-radius: 50%;
+}
+
+.crypto-detail h2 {
+    font-size: 28px;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.crypto-detail p {
+    font-size: 18px;
+    margin: 10px 0;
+    text-align: center;
+}
+
+/* Сообщения об ошибках и загрузке */
+.loading-message, .error-message {
+    text-align: center;
+    font-size: 18px;
+    padding: 10px;
+    margin: 20px auto;
+    border-radius: 5px;
+    max-width: 600px;
+}
+
+.loading-message {
+    color: #4b5563;
+}
+
+.error-message {
+    color: #ef4444;
+    background-color: #fef2f2;
+    border: 1px solid #fecaca;
+}
+
+/* График (Chart.js) */
+.chartjs-render-monitor {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Панорамирование и масштабирование с помощью Chart.js Zoom Plugin */
+.chart-container {
+    position: relative;
+    width: 100%;
+    height: 400px;
+}

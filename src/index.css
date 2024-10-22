@@ -1,13 +1,38 @@
+/* Основные стили */
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  padding: 0;
+  font-family: 'Roboto', sans-serif; /* Изменено на более современный шрифт */
+  background-color: #121212; /* Темный фон для современного вида */
+  color: #e0e0e0; /* Светлый текст для контраста */
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+/* Заголовок */
+h1 {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 36px; /* Увеличен размер шрифта */
+  color: #ffffff; /* Белый цвет для лучшей видимости */
+  text-transform: uppercase; /* Преобразование текста в верхний регистр для стиля */
+  letter-spacing: 1px; /* Увеличение межбуквенного расстояния */
+}
+
+/* Сообщение о загрузке */
+.loading-message {
+  text-align: center;
+  font-size: 20px; /* Увеличен размер шрифта для сообщения о загрузке */
+  color: #b0b0b0; /* Серый цвет для менее заметного текста */
+}
+
+/* Сообщение об ошибке */
+.error-message {
+  text-align: center;
+  color: #ef4444; /* Красный цвет для текста ошибки */
+  background-color: #fef2f2; /* Светло-красный фон для ошибки */
+  padding: 15px; /* Увеличено расстояние вокруг текста */
+  margin: 20px auto;
+  border-radius: 8px; /* Более плавные углы */
+  max-width: 600px;
+  border: 1px solid #fecaca; /* Граница для выделения ошибки */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Добавление тени для глубины */
 }

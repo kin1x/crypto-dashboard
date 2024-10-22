@@ -1,38 +1,137 @@
-.App {
+/* Основные стили */
+body {
+  font-family: 'Roboto', sans-serif;
+  background-color: #121212; /* Темный фон для более современного вида */
+  margin: 0;
+  padding: 0;
+  color: #e0e0e0; /* Светлый текст для контраста */
+}
+
+/* Стили для HomePage */
+.home-page {
   text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
+  padding: 20px;
   min-height: 100vh;
+}
+
+/* Стили для заголовка */
+.header {
+  background-color: #1f1f1f; /* Темно-серый цвет для заголовка */
+  color: #ffffff;
+  padding: 20px 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+.header h1 {
+  font-size: 36px;
+  margin: 0;
+  font-weight: 700;
+}
+
+/* Стили для списка криптовалют */
+.crypto-list {
+  padding: 20px;
+  list-style-type: none;
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  flex-wrap: wrap;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
 }
 
-.App-link {
-  color: #61dafb;
+.crypto-item {
+  background: #282828; /* Темный фон для элементов списка */
+  padding: 15px;
+  margin: 15px;
+  border: 1px solid #3c3c3c; /* Легкая граница для отделения элементов */
+  width: 220px; 
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.crypto-item:hover {
+  background: #383838; /* Светлее при наведении */
+  transform: translateY(-5px);
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Логотип криптовалюты */
+.crypto-logo {
+  height: 60px;
+  width: 60px;
+  display: block;
+  margin: 0 auto 10px;
+  border-radius: 50%;
+}
+
+/* Детали криптовалюты */
+.crypto-detail {
+  text-align: center;
+  padding: 30px;
+  background: #282828;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  margin: 20px auto;
+  max-width: 600px;
+}
+
+.crypto-detail img {
+  border-radius: 50%;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.crypto-detail h2 {
+  font-size: 28px;
+  color: #ffffff;
+}
+
+.crypto-detail p {
+  font-size: 18px;
+  margin: 10px 0;
+  color: #b0b0b0;
+}
+
+/* Стили сообщения об ошибке */
+.error-message {
+  text-align: center;
+  color: #ef4444;
+  background-color: #fef2f2;
+  padding: 10px;
+  margin: 20px auto;
+  border-radius: 5px;
+  max-width: 600px;
+  border: 1px solid #fecaca;
+}
+
+/* Стили ссылок */
+.header ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+}
+
+.header ul li {
+  margin: 0 20px;
+}
+
+.header a {
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 18px;
+  transition: color 0.3s ease;
+}
+
+.header a:hover {
+  color: #4ade80; /* Цвет ссылки при наведении */
+}
+
+/* Убираем стиль для посещенных ссылок */
+.header a:visited {
+  color: #ffffff; /* Цвет посещенной ссылки, чтобы убрать фиолетовый эффект */
 }
