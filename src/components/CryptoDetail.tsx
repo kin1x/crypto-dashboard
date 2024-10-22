@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { FC, useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Line } from 'react-chartjs-2';
 import axios from 'axios';
@@ -28,7 +28,6 @@ ChartJS.register(
     TimeScale
 );
 
-// Определяем типы данных для crypto и chartData
 interface CryptoData {
     name: string;
     image: { large: string };
@@ -48,22 +47,24 @@ interface ChartData {
     }[];
 }
 
-const CryptoDetail: React.FC = () => {
+const CryptoDetail: FC = () => {
     const { id } = useParams<{ id: string }>();
     const [crypto, setCrypto] = useState<CryptoData | null>(null);
     const [chartData, setChartData] = useState<ChartData | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
 
+    // Функция для получения данных
     const fetchData = async () => {
         setLoading(true);
+        setCrypto(null);  // Сбрасываем данные криптовалюты
+        setChartData(null); // Сбрасываем данные графика
         try {
             const [response, chartResponse] = await axios.all([
                 axios.get<CryptoData>(`https://api.coingecko.com/api/v3/coins/${id}`),
                 axios.get<any>(`https://api.coingecko.com/api/v3/coins/${id}/market_chart?vs_currency=usd&days=1`),
             ]);
 
-            // Проверяем статус ответа
             if (response.status === 200 && chartResponse.status === 200) {
                 setCrypto(response.data);
                 setChartData({
@@ -82,13 +83,14 @@ const CryptoDetail: React.FC = () => {
                 setError("Не удалось получить данные о криптовалюте.");
             }
         } catch (error) {
-            console.error("API Error: ", error); // Логируем ошибку
+            console.error("API Error: ", error);
             setError("Не удалось получить данные. Пожалуйста, попробуйте снова позже.");
         } finally {
             setLoading(false);
         }
     };
 
+    // Эффект для получения данных при каждом изменении id
     useEffect(() => {
         fetchData();
     }, [id]);

@@ -6,7 +6,7 @@ const Header: FC = () => (
     <div className="header">
         <h1 className="header-title">Crypto Dashboard</h1>
         <ul className="header-links">
-            <li><Link to="/">Home</Link></li>
+            
             {/* Если в будущем добавите больше страниц, можете добавить их сюда */}
         </ul>
     </div>

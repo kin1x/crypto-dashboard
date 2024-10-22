@@ -31,7 +31,9 @@ const CryptoList: FC = () => {
                     }
                 );
                 setCryptos(response.data);
+                setError(null); // Сбрасываем ошибку при успешном запросе
             } catch (error) {
+                console.error("Failed to fetch cryptocurrencies:", error);
                 setError('Failed to fetch cryptocurrencies. Please try again later.');
             }
         };
