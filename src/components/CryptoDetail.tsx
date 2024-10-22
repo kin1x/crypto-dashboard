@@ -53,12 +53,20 @@ const CryptoDetail: FC = () => {
     const [chartData, setChartData] = useState<ChartData | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
+    const [notFoundError, setNotFoundError] = useState<string | null>(null);
+    const [networkError, setNetworkError] = useState<string | null>(null);
+    const [parseError, setParseError] = useState<string | null>(null);
 
     // Функция для получения данных
     const fetchData = async () => {
         setLoading(true);
-        setCrypto(null);  // Сбрасываем данные криптовалюты
-        setChartData(null); // Сбрасываем данные графика
+        setCrypto(null);
+        setChartData(null);
+        setError(null);
+        setNotFoundError(null);
+        setNetworkError(null);
+        setParseError(null);
+        
         try {
             const [response, chartResponse] = await axios.all([
                 axios.get<CryptoData>(`https://api.coingecko.com/api/v3/coins/${id}`),
@@ -66,6 +74,10 @@ const CryptoDetail: FC = () => {
             ]);
 
             if (response.status === 200 && chartResponse.status === 200) {
+                if (!response.data || !chartResponse.data.prices) {
+                    throw new Error("No data found");
+                }
+
                 setCrypto(response.data);
                 setChartData({
                     labels: chartResponse.data.prices.map((price: [number, number]) => new Date(price[0])),
@@ -78,13 +90,21 @@ const CryptoDetail: FC = () => {
                         },
                     ],
                 });
-                setError(null);
             } else {
-                setError("Не удалось получить данные о криптовалюте.");
+                setNotFoundError("Криптовалюта не найдена. Проверьте идентификатор.");
             }
         } catch (error) {
-            console.error("API Error: ", error);
-            setError("Не удалось получить данные. Пожалуйста, попробуйте снова позже.");
+            if (axios.isAxiosError(error)) {
+                if (error.response) {
+                    setNotFoundError("Криптовалюта не найдена. Проверьте идентификатор.");
+                } else if (error.request) {
+                    setNetworkError("Сетевой сбой. Пожалуйста, проверьте ваше интернет-соединение.");
+                } else {
+                    setParseError("Произошла ошибка при парсинге данных. Пожалуйста, попробуйте снова.");
+                }
+            } else {
+                setParseError("Неизвестная ошибка. Пожалуйста, попробуйте снова.");
+            }
         } finally {
             setLoading(false);
         }
@@ -94,6 +114,7 @@ const CryptoDetail: FC = () => {
     useEffect(() => {
         fetchData();
     }, [id]);
+
 
     // Настройки графика
     const options: ChartOptions<'line'> = {
@@ -130,11 +151,14 @@ const CryptoDetail: FC = () => {
         },
     };
 
-
     return (
         <div className="crypto-detail">
             {loading && <div className="loading-message">Loading...</div>}
-            {error && <div className="error-message">{error}</div>}
+            {(error || notFoundError || networkError || parseError) && (
+                <div className="error-message">
+                    {error || notFoundError || networkError || parseError}
+                </div>
+            )}
             {crypto && (
                 <div>
                     <h2>{crypto.name} Details</h2>

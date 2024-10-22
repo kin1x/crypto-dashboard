@@ -14,11 +14,14 @@ interface Crypto {
 const CryptoList: FC = () => {
     const [cryptos, setCryptos] = useState<Crypto[]>([]);
     const [error, setError] = useState<string | null>(null);
+    const [loading, setLoading] = useState<boolean>(true); // Добавлено состояние загрузки
 
     useEffect(() => {
         const fetchCryptos = async () => {
+            setLoading(true); // Начинаем загрузку
+            setError(null); // Сбрасываем ошибку перед новым запросом
             try {
-                const response = await axios.get(
+                const response = await axios.get<Crypto[]>(
                     'https://api.coingecko.com/api/v3/coins/markets',
                     {
                         params: {
@@ -31,10 +34,23 @@ const CryptoList: FC = () => {
                     }
                 );
                 setCryptos(response.data);
-                setError(null); // Сбрасываем ошибку при успешном запросе
             } catch (error) {
-                console.error("Failed to fetch cryptocurrencies:", error);
-                setError('Failed to fetch cryptocurrencies. Please try again later.');
+                if (axios.isAxiosError(error)) {
+                    // Обработка ошибок Axios
+                    if (error.response) {
+                        setError(`Ошибка: ${error.response.status} - ${error.response.statusText}`);
+                    } else if (error.request) {
+                        setError('Network error. Please check your internet connection.');
+                        console.error("Request details:", error.request); // Логируем детали запроса
+                    } else {
+                        setError('Error occurred while processing the request.');
+                        console.error("Error message:", error.message); // Логируем сообщение об ошибке
+                    }
+                } else {
+                    setError('An unknown error occurred. Please try again later.');
+                }
+            } finally {
+                setLoading(false); // Заканчиваем загрузку
             }
         };
 
@@ -43,6 +59,7 @@ const CryptoList: FC = () => {
 
     return (
         <div className="crypto-list">
+            {loading && <div className="loading-message">Loading cryptocurrencies...</div>}
             {error && <div className="error-message">{error}</div>}
             {cryptos.map((crypto) => (
                 <div key={crypto.id} className="crypto-item">
